@@ -17,7 +17,9 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:text="@string/title_breeds"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@color/colorAccent"
         app:layout_constraintTop_toTopOf="parent"/>
+
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -25,6 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
+        app:itemTextColor="@color/colorAccent"
+        app:itemIconTint="@color/colorAccent"
         android:background="@drawable/transparent_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
