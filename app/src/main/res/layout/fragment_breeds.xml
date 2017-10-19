@@ -1,5 +1,4 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<!--<layout
         xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
@@ -7,33 +6,48 @@
     <variable
         name="breed"
         type="randomtechsolutions.com.dogsparadise.Breeds"/>
-</data>
+</data>-->
 <FrameLayout
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="randomtechsolutions.com.dogsparadise.BreedsFragment">
-<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    tools:context="randomtechsolutions.com.dogsparadise.BreedsFragment">
 
-    <com.gtomato.android.ui.widget.CarouselView
-        android:id="@+id/carousel"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_centerInParent="true"
 
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_tv"
-        android:textSize="12sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        />
-</RelativeLayout>
+
+        <com.gtomato.android.ui.widget.CarouselView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/carousel_background"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#B07986CB" />
+
+        <com.gtomato.android.ui.widget.CarouselView
+            android:id="@+id/carousel"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_centerInParent="true"
+            />
+
+        <TextView
+            android:id="@+id/label_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:textSize="12sp"
+            />
 
 
 </FrameLayout>
-</layout>

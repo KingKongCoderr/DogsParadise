@@ -39,6 +39,7 @@ public class CarouselAdapter extends CarouselView.Adapter<CarouselAdapter.ViewHo
         Picasso
                 .with(imageView.getContext())
                 .load(imgUrl)
+                .fit()
                 .placeholder(placeHolder)
                 .error(error)
                 .into(imageView);
@@ -46,7 +47,7 @@ public class CarouselAdapter extends CarouselView.Adapter<CarouselAdapter.ViewHo
     
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         DogItemBinding dogItemBinding =
                 DogItemBinding.inflate(layoutInflater, parent, false);
         return new ViewHolder(dogItemBinding);
@@ -68,19 +69,15 @@ public class CarouselAdapter extends CarouselView.Adapter<CarouselAdapter.ViewHo
         private final DogItemBinding dogItemBinding;
         
         public ViewHolder(DogItemBinding binding) {
-            super(binding.getRoot());
+            super(binding.getRoot().getRootView());
             this.dogItemBinding = binding;
         }
         
         void bindModel(Dog dog) {
-            dogItemBinding.setDog(dog);
+           // dogItemBinding.setDog(dog);
+            dogItemBinding.executePendingBindings();
         }
         
-        public void breedSelected(Dog dog) {
-            Toast.makeText(dogItemBinding.getRoot().getContext()
-                    , dog.getBreed()
-                    , Toast.LENGTH_SHORT).show();
-        }
         
         /*@Override
         public void onClick(View view) {

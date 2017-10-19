@@ -38,11 +38,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
     
     private void createBreedFragment(){
         if(getSupportFragmentManager().findFragmentByTag(BREEDS_FRAGMENT_TAG)==null) {
-        
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, new BreedsFragment(), BREEDS_FRAGMENT_TAG)
+                    .commit();
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new BreedsFragment(), BREEDS_FRAGMENT_TAG)
-                .commit();
+        
     }
     
     private void createImagesFragment(){
