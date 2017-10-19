@@ -9,12 +9,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gtomato.android.ui.transformer.CoverFlowViewTransformer;
 import com.gtomato.android.ui.widget.CarouselView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import randomtechsolutions.com.dogsparadise.Network.DogNetworkManager;
 import randomtechsolutions.com.dogsparadise.Network.DogsApi;
 import retrofit2.Call;
@@ -33,6 +44,7 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
    // private OnFragmentInteractionListener mListener;
     private CarouselView carouselView;
     private TextView label;
+    private List<Dog> dogs;
     
     public BreedsFragment() {
         // Required empty public constructor
@@ -43,10 +55,11 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_breeds, container, false);
+        dogs = new ArrayList<>();
         carouselView = (CarouselView)v.findViewById(R.id.carousel);
         label = (TextView)v.findViewById(R.id.label_tv);
         carouselView.setTransformer(new CoverFlowViewTransformer());
-        carouselView.setAdapter(new CarouselAdapter(getContext(),new ArrayList<String>()));
+        carouselView.setAdapter(new CarouselAdapter(getContext(),new ArrayList<Dog>()));
         carouselView.setClipChildren(false);
         carouselView.setExtraVisibleChilds(6);
         carouselView.setOnItemSelectedListener(new CarouselView.OnItemSelectedListener() {
@@ -78,11 +91,98 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
     @Override
     public void onResponse(Call<Breeds> call, Response<Breeds> response) {
         Breeds breeds = response.body();
-        carouselView.setAdapter(new CarouselAdapter(getContext(),breeds.getMessage()));
+        List<Dog> dogs = getDogsWithImageUrl(breeds.getMessage());
+        carouselView.setAdapter(new CarouselAdapter(getContext(),dogs));
+    }
+    
+    private List<Dog> getDogsWithImageUrl(List<String> message) {
+        List<Dog> dogs = new ArrayList<>();
+        String baseUrl = DogNetworkManager.baseUrl;
+        String imagePath = "/api/breed/{breed name}/images/random";
+        Uri.Builder builder = new Uri.Builder();
+        DogNetworkManager dogNetworkManager = new DogNetworkManager();
+        
+        
+        
+        Observable.fromIterable(message)
+                .flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
+                    @Override
+                    public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
+                        return dogNetworkManager.getDogsApi().getDogImageUrl(s);
+                    }
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BreedImagePojo>() {
+                    int count = 0;
+                    
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
+    
+                    }
+    
+                    @Override
+                    public void onNext(BreedImagePojo breedImagePojo) {
+                        String url = breedImagePojo.getMessage();
+                         dogs.add(new Dog(message.get(count),breedImagePojo.getMessage()));
+                         count++;
+                    }
+    
+                    @Override
+                    public void onError(Throwable e) {
+                        // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
+    
+                    }
+    
+                    @Override
+                    public void onComplete() {
+                        // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
+    
+                    }
+                });
+        
+        /*for (String s: message){
+            *//*builder.scheme("https").authority("dog.ceo").appendPath("api").appendPath("breed")
+                    .appendPath(s)
+                    .appendPath("images")
+                    .appendPath("random").build();
+            String apiPath = builder.toString();*//*
+    
+            Observable<BreedImagePojo> dogObservable = dogNetworkManager.getDogsApi().getDogImageUrl(s);
+            Observable
+                    .just(dogObservable)
+                    *//*.flatMap(new Function<Observable<BreedImagePojo>, ObservableSource<?>>() {
+                        @Override
+                        public ObservableSource<?> apply(Observable<BreedImagePojo> breedImagePojoObservable) throws Exception {
+                            return breedImagePojoObservable.subscribeOn(Schedulers.io());
+                        }
+                    })*//*
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
+            
+                    
+            
+        }*/
+       // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
+        return dogs;
+        
+    }
+    
+    private void onFailure(Throwable error) {
+        Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
+    
+    }
+    
+    private void onResponse(List<BreedImagePojo> response) {
+        
+        String imgUrl = response.get(0).getMessage();
+        //dogs.add(new Dog(s,response.get(0).getMessage()));
     }
     
     @Override
     public void onFailure(Call<Breeds> call, Throwable t) {
+        Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
     
     }
    

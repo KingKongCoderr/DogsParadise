@@ -1,29 +1,20 @@
 package randomtechsolutions.com.dogsparadise;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by nande on 10/18/2017.
  */
 
-import android.content.Context;
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableList;
-import android.support.annotation.NonNull;
-import android.view.MenuItem;
-
-import java.util.List;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-
-public class Breeds  {
+public class BreedImagePojo {
     
     @SerializedName("status")
     @Expose
     private String status;
     @SerializedName("message")
     @Expose
-    private List<String> message;
+    private String message;
     
     public String getStatus() {
         return status;
@@ -33,12 +24,11 @@ public class Breeds  {
         this.status = status;
     }
     
-    public List<String> getMessage() {
+    public String getMessage() {
         return message;
     }
     
-    public void setMessage(List<String> message) {
+    public void setMessage(String message) {
         this.message = message;
     }
-    
 }

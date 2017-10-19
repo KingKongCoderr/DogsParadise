@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <data>
+        <variable
+            name="dog"
+            type="randomtechsolutions.com.dogsparadise.Dog"/>
+        <variable
+            name="controller"
+            type="randomtechsolutions.com.dogsparadise.CarouselAdapter.ViewHolder"/>
+    </data>
+
+<android.support.constraint.ConstraintLayout
+    android:layout_width="150dp"
+    android:layout_height="200dp"
     android:id="@+id/viewgroup"
     android:padding="20dp"
-    android:background="@color/colorAccent">
+    android:background="@color/colorAccent"
+    android:onClick="@{() -> controller.breedSelected(dog)}"
+    >
 
-    <TextView
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:id="@+id/breed_tv"
-        android:textSize="30sp"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/breed_iv"
+        app:error="@{@drawable/owner_error}"
+        app:placeHolder="@{@drawable/owner_placeholder}"
+        app:imgUrl="@{dog.imagePath}"
         />
 
+
 </android.support.constraint.ConstraintLayout>
+
+</layout>
