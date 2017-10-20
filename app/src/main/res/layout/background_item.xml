@@ -22,6 +22,7 @@
             app:error="@{@drawable/owner_error}"
             app:placeHolder="@{@drawable/owner_placeholder}"
             app:imgUrl="@{obj.imagePath}"
+            app:shouldBlur="@{true}"
             />
 
     </android.support.constraint.ConstraintLayout>

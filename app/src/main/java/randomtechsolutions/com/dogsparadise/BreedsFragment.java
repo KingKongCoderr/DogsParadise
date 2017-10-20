@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gtomato.android.ui.transformer.CoverFlowViewTransformer;
+import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer;
 import com.gtomato.android.ui.widget.CarouselView;
 
 import java.util.ArrayList;
@@ -131,16 +132,13 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
                         Toast.makeText(getContext()
                                 , "oncomplete"
                                 , Toast.LENGTH_SHORT).show();
-                        // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
                         progressBar.setVisibility(View.GONE);
-                        carouselViewBackground.setAdapter(new ForgroundAdapter(R.layout.background_item,dogs,getContext()));
-                       // carouselViewBackground.setAdapter(new CarouselAdapter(getContext(), dogs));
-                        carouselView.setTransformer(new CoverFlowViewTransformer());
-                        carouselView.setAdapter(new ForgroundAdapter(R.layout.dog_item,dogs,getContext()));
-                        //carouselView.setAdapter(new CarouselAdapter(getContext(), dogs));
+                        carouselViewBackground.setAdapter(new ForgroundAdapter(R.layout.background_item, dogs, getContext()));
+                        carouselView.setTransformer(new FlatMerryGoRoundTransformer());
+                        carouselView.setAdapter(new ForgroundAdapter(R.layout.dog_item, dogs, getContext()));
                         carouselView.setClipChildren(false);
                         carouselView.setClickToScroll(false);
-                        // carouselView.setInfinite(true);
+                        carouselView.setInfinite(true);
                         carouselView.setExtraVisibleChilds(6);
                         carouselView.setOnScrollListener(new CarouselView.OnScrollListener() {
                             @Override
@@ -159,10 +157,10 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
                             @Override
                             public void onItemSelected(CarouselView carouselView, int position, int adapterPosition, RecyclerView.Adapter adapter) {
                                 if (dogs.size() > 0) {
-                                    label.setText("Selected Position: " + adapterPosition + " " + dogs.get(position).getBreed());
+                                    position = Math.abs(position%dogs.size());
+                                    label.setText(dogs.get(position).getBreed());
                                 }
                                 carouselViewBackground.scrollToPosition(position);
-                                //carouselView.setBackgroundColor(getResources().getColor(R.color.colorPrimary,null));
                             }
                             
                             @Override
@@ -174,7 +172,6 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
                     }
                 });
         
-        // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
         return dogs;
         
     }

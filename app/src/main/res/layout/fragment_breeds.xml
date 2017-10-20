@@ -23,30 +23,28 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#B07986CB" />
 
         <com.gtomato.android.ui.widget.CarouselView
             android:id="@+id/carousel"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="400dp"
             android:layout_gravity="center"
             />
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/progressBar"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             />
 
         <TextView
             android:id="@+id/label_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:textSize="12sp"
+            android:layout_gravity="top|center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:backgroundTint="@color/transparent_with_opacity"
             />
 
 

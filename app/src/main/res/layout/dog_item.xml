@@ -11,7 +11,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 
 <android.support.constraint.ConstraintLayout
     android:layout_width="200dp"
-    android:layout_height="300dp"
+    android:layout_height="250dp"
     android:id="@+id/viewgroup"
     >
 
@@ -22,6 +22,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         app:error="@{@drawable/owner_error}"
         app:placeHolder="@{@drawable/owner_placeholder}"
         app:imgUrl="@{obj.imagePath}"
+        app:shouldBlur="@{false}"
         />
 
 </android.support.constraint.ConstraintLayout>
