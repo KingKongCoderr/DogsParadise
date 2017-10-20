@@ -149,7 +149,7 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
                         });
                         carouselView.setOnItemClickListener((adapter, view, position, adapterposition) -> {
                             Toast.makeText(getContext()
-                                    , dogs.get(position).getBreed()
+                                    , dogs.get(adapterposition).getBreed()
                                     , Toast.LENGTH_SHORT).show();
                         });
                         
@@ -157,10 +157,9 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
                             @Override
                             public void onItemSelected(CarouselView carouselView, int position, int adapterPosition, RecyclerView.Adapter adapter) {
                                 if (dogs.size() > 0) {
-                                    position = Math.abs(position%dogs.size());
-                                    label.setText(dogs.get(position).getBreed());
+                                    label.setText(dogs.get(adapterPosition).getBreed());
                                 }
-                                carouselViewBackground.scrollToPosition(position);
+                                carouselViewBackground.scrollToPosition(adapterPosition);
                             }
                             
                             @Override

@@ -20,15 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/carousel_background"
-            android:layout_centerInParent="true"
             android:layout_gravity="center"
             />
 
         <com.gtomato.android.ui.widget.CarouselView
             android:id="@+id/carousel"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:layout_gravity="center_vertical"
             />
         <ProgressBar
             android:layout_width="wrap_content"
@@ -42,9 +42,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="24sp"
-            android:backgroundTint="@color/transparent_with_opacity"
+            android:background="@color/transparent_with_opacity"
             />
 
 
