@@ -6,7 +6,7 @@
     <data>
         <variable
             name="obj"
-            type="randomtechsolutions.com.dogsparadise.Dog"/>
+            type="randomtechsolutions.com.dogsparadise.model.Dog"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

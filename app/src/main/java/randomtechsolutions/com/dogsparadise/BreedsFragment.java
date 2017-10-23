@@ -1,11 +1,8 @@
 package randomtechsolutions.com.dogsparadise;
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gtomato.android.ui.transformer.CoverFlowViewTransformer;
 import com.gtomato.android.ui.transformer.FlatMerryGoRoundTransformer;
 import com.gtomato.android.ui.widget.CarouselView;
 
@@ -24,14 +20,15 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import randomtechsolutions.com.dogsparadise.Network.DogNetworkManager;
-import randomtechsolutions.com.dogsparadise.Network.DogsApi;
+import randomtechsolutions.com.dogsparadise.adapter.ForgroundAdapter;
+import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
+import randomtechsolutions.com.dogsparadise.model.Breeds;
+import randomtechsolutions.com.dogsparadise.model.Dog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

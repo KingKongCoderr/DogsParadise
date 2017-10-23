@@ -1,18 +1,16 @@
-package randomtechsolutions.com.dogsparadise;
+package randomtechsolutions.com.dogsparadise.adapter;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import jp.wasabeef.blurry.Blurry;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
+import randomtechsolutions.com.dogsparadise.model.Dog;
 
 /**
  * Created by nande on 10/19/2017.
@@ -48,7 +46,7 @@ public class ForgroundAdapter extends BaseAdapter {
         }
     }
     
-    @BindingAdapter({"app:blurImage"})
+/*    @BindingAdapter({"app:blurImage"})
     public static void blurImage(ImageView view, String dummyString) {
         Blurry.with(view.getContext())
                 .radius(10)
@@ -58,8 +56,7 @@ public class ForgroundAdapter extends BaseAdapter {
                 .capture(view)
                 .into(view);
                 //.onto(view);
-        
-    }
+    }*/
     
     public ForgroundAdapter(int layoutId, List<Dog> dogs, Context context) {
         this.layoutId = layoutId;

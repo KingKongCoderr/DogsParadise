@@ -1,4 +1,4 @@
-package randomtechsolutions.com.dogsparadise;
+package randomtechsolutions.com.dogsparadise.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;

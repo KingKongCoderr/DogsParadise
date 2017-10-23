@@ -9,11 +9,7 @@ import android.support.annotation.Nullable;
  * Created by nande on 10/18/2017.
  */
 
-public class DownloadService extends Service{
-    
-    
-    
-    
+public class DownloadService extends Service {
     
     
     @Nullable

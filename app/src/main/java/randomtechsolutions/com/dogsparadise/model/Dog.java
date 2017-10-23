@@ -1,4 +1,4 @@
-package randomtechsolutions.com.dogsparadise;
+package randomtechsolutions.com.dogsparadise.model;
 
 
 /**

@@ -1,22 +1,19 @@
-package randomtechsolutions.com.dogsparadise;
+package randomtechsolutions.com.dogsparadise.adapter;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gtomato.android.ui.widget.CarouselView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import randomtechsolutions.com.dogsparadise.model.Dog;
 import randomtechsolutions.com.dogsparadise.databinding.DogItemBinding;
 
 /**

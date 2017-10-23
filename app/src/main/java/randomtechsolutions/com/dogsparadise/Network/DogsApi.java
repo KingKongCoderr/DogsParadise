@@ -1,11 +1,8 @@
 package randomtechsolutions.com.dogsparadise.Network;
 
-import java.util.List;
-
 import io.reactivex.Observable;
-import randomtechsolutions.com.dogsparadise.BreedImagePojo;
-import randomtechsolutions.com.dogsparadise.Breeds;
-import randomtechsolutions.com.dogsparadise.Dog;
+import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
+import randomtechsolutions.com.dogsparadise.model.Breeds;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
