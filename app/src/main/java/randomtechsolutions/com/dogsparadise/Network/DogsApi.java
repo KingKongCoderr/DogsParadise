@@ -14,7 +14,7 @@ import retrofit2.http.Path;
 public interface DogsApi   {
     
     @GET("api/breeds/list")
-    Call<Breeds> getBreeds();
+    Observable<Breeds> getBreeds();
     
     @GET("/api/breed/{breed}/images/random")
     Observable<BreedImagePojo> getDogImageUrl(@Path("breed") String breed);
