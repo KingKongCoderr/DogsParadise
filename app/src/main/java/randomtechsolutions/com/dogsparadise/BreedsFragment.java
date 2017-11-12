@@ -19,9 +19,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -30,9 +28,6 @@ import randomtechsolutions.com.dogsparadise.adapter.ForgroundAdapter;
 import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
 import randomtechsolutions.com.dogsparadise.model.Breeds;
 import randomtechsolutions.com.dogsparadise.model.Dog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -71,30 +66,24 @@ public class BreedsFragment extends Fragment {
 		dogNetworkManager = new DogNetworkManager();
 
 
-		getBreedsObservable().doOnNext(breeds -> getDogsWithImageUrl(breeds.getMessage()))
+		getBreedsObservable()
+				.flatMap(new Function<Breeds, Observable<String>>() {
+					@Override
+					public Observable<String> apply(Breeds breeds) throws Exception {
+						breedNames = breeds.getMessage();
+						return Observable.fromIterable(breedNames);
+					}
+				})
+				.flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
+					@Override
+					public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
+						return getBreedImageObservable(s);
+					}
+				})
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Observer<Breeds>() {
-					@Override
-					public void onSubscribe(Disposable d) {
+				.subscribe(getObserverWithImageUrl());
 
-					}
-
-					@Override
-					public void onNext(Breeds breeds) {
-						getDogsWithImageUrl(breeds.getMessage());
-					}
-
-					@Override
-					public void onError(Throwable e) {
-
-					}
-
-					@Override
-					public void onComplete() {
-
-					}
-				});
 		return v;
 	}
 
@@ -107,19 +96,19 @@ public class BreedsFragment extends Fragment {
 		return dogNetworkManager.getDogsApi().getDogImageUrl(breedName);
 	}
 
-	private void getDogsWithImageUrl(List<String> message) {
+	/*private void getDogsWithImageUrl(List<String> message) {
 		Observable<BreedImagePojo> observable = Observable.fromIterable(message)
 				.flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
 					@Override
 					public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
-						return dogNetworkManager.getDogsApi().getDogImageUrl(s);
+						return getBreedImageObservable(s);
 					}
 				}).subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread());
 		observable.subscribe(getObserverWithImageUrl(message));
-	}
+	}*/
 
-	private DisposableObserver<BreedImagePojo> getObserverWithImageUrl(List<String> message) {
+	private DisposableObserver<BreedImagePojo> getObserverWithImageUrl() {
 		DisposableObserver observer = new DisposableObserver<BreedImagePojo>() {
 			int count = 0;
 
@@ -132,7 +121,7 @@ public class BreedsFragment extends Fragment {
 			@Override
 			public void onNext(BreedImagePojo breedImagePojo) {
 				String url = breedImagePojo.getMessage();
-				dogs.add(new Dog(message.get(count), breedImagePojo.getMessage()));
+				dogs.add(new Dog(breedNames.get(count), breedImagePojo.getMessage()));
 				count++;
 			}
 
@@ -152,7 +141,7 @@ public class BreedsFragment extends Fragment {
 				carouselView.setTransformer(new FlatMerryGoRoundTransformer());
 				carouselView.setAdapter(new ForgroundAdapter(R.layout.dog_item, dogs, getContext()));
 				carouselView.setClipChildren(false);
-				carouselView.setClickToScroll(false);
+				carouselView.setClickToScroll(true);
 				carouselView.setInfinite(true);
 				carouselView.setExtraVisibleChilds(6);
 				carouselView.setOnScrollListener(new CarouselView.OnScrollListener() {
