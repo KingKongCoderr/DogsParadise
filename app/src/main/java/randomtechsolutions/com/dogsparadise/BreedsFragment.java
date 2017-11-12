@@ -19,19 +19,15 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import randomtechsolutions.com.dogsparadise.Network.DogNetworkManager;
 import randomtechsolutions.com.dogsparadise.adapter.ForgroundAdapter;
 import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
 import randomtechsolutions.com.dogsparadise.model.Breeds;
 import randomtechsolutions.com.dogsparadise.model.Dog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -40,143 +36,152 @@ import retrofit2.Response;
  * {@link BreedsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class BreedsFragment extends Fragment implements Callback<Breeds> {
-    
-    // private OnFragmentInteractionListener mListener;
-    private CarouselView carouselView, carouselViewBackground;
-    private TextView label;
-    private ProgressBar progressBar;
-    private List<Dog> dogs;
-    
-    public BreedsFragment() {
-        // Required empty public constructor
-    }
-    
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_breeds, container, false);
-        //FragmentBreedsBinding fragmentBreedsBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.fragment_breeds,container,false);
-        carouselView = (CarouselView) v.findViewById(R.id.carousel);//fragmentBreedsBinding.carousel;
-        carouselViewBackground = (CarouselView) v.findViewById(R.id.carousel_background);
-        label = (TextView) v.findViewById(R.id.label_tv);// fragmentBreedsBinding.labelTv;
-        progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-        dogs = new ArrayList<>();
-        
-        //CarouselView carouselView = fragmentBreedsBinding.carousel;
-        //carouselView.setLayoutManager(new LinearLayoutManager(getContext()));
-        
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                
-                DogNetworkManager networkManager = new DogNetworkManager();
-                Call<Breeds> dogsApiCall = networkManager.getDogsApi().getBreeds();
-                dogsApiCall.enqueue(BreedsFragment.this);
-                
-            }
-        });
-        thread.start();
-        return v;
-    }
-    
-    @Override
-    public void onResponse(Call<Breeds> call, Response<Breeds> response) {
-        Breeds breeds = response.body();
-        dogs = getDogsWithImageUrl(breeds.getMessage());
-        //carouselView.swapAdapter(new CarouselAdapter(getContext(),dogs),true);
-        //carouselView.scrollToPosition(3);
-        // carouselView.setAdapter(new CarouselAdapter(getContext(), dogs));
-    }
-    
-    private List<Dog> getDogsWithImageUrl(List<String> message) {
-        List<Dog> dogs = new ArrayList<>();
-        DogNetworkManager dogNetworkManager = new DogNetworkManager();
-        Observable.fromIterable(message)
-                .flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
-                    @Override
-                    public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
-                        return dogNetworkManager.getDogsApi().getDogImageUrl(s);
-                    }
-                }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BreedImagePojo>() {
-                    int count = 0;
-                    
-                    @Override
+public class BreedsFragment extends Fragment {
+
+	// private OnFragmentInteractionListener mListener;
+	private CarouselView carouselView, carouselViewBackground;
+	private TextView label;
+	private ProgressBar progressBar;
+	private List<Dog> dogs;
+	DogNetworkManager dogNetworkManager;
+
+	private List<String> breedNames;
+
+	public BreedsFragment() {
+		// Required empty public constructor
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		View v = inflater.inflate(R.layout.fragment_breeds, container, false);
+		//FragmentBreedsBinding fragmentBreedsBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.fragment_breeds,container,false);
+		carouselView = (CarouselView) v.findViewById(R.id.carousel);//fragmentBreedsBinding.carousel;
+		carouselViewBackground = (CarouselView) v.findViewById(R.id.carousel_background);
+		label = (TextView) v.findViewById(R.id.label_tv);// fragmentBreedsBinding.labelTv;
+		progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
+		progressBar.setVisibility(View.VISIBLE);
+		dogs = new ArrayList<>();
+		dogNetworkManager = new DogNetworkManager();
+
+
+		getBreedsObservable()
+				.flatMap(new Function<Breeds, Observable<String>>() {
+					@Override
+					public Observable<String> apply(Breeds breeds) throws Exception {
+						breedNames = breeds.getMessage();
+						return Observable.fromIterable(breedNames);
+					}
+				})
+				.flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
+					@Override
+					public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
+						return getBreedImageObservable(s);
+					}
+				})
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(getObserverWithImageUrl());
+
+		return v;
+	}
+
+
+	private Observable<Breeds> getBreedsObservable() {
+		return dogNetworkManager.getDogsApi().getBreeds();
+	}
+
+	private Observable<BreedImagePojo> getBreedImageObservable(String breedName) {
+		return dogNetworkManager.getDogsApi().getDogImageUrl(breedName);
+	}
+
+	/*private void getDogsWithImageUrl(List<String> message) {
+		Observable<BreedImagePojo> observable = Observable.fromIterable(message)
+				.flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
+					@Override
+					public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
+						return getBreedImageObservable(s);
+					}
+				}).subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread());
+		observable.subscribe(getObserverWithImageUrl(message));
+	}*/
+
+	private DisposableObserver<BreedImagePojo> getObserverWithImageUrl() {
+		DisposableObserver observer = new DisposableObserver<BreedImagePojo>() {
+			int count = 0;
+
+                   /* @Override
                     public void onSubscribe(Disposable d) {
                         // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
-                        
-                    }
-                    
-                    @Override
-                    public void onNext(BreedImagePojo breedImagePojo) {
-                        String url = breedImagePojo.getMessage();
-                        dogs.add(new Dog(message.get(count), breedImagePojo.getMessage()));
-                        count++;
-                    }
-                    
-                    @Override
-                    public void onError(Throwable e) {
-                        // dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
-                        
-                    }
-                    
-                    @Override
-                    public void onComplete() {
-                        Toast.makeText(getContext()
-                                , "oncomplete"
-                                , Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                        carouselViewBackground.setAdapter(new ForgroundAdapter(R.layout.background_item, dogs, getContext()));
-                        carouselView.setTransformer(new FlatMerryGoRoundTransformer());
-                        carouselView.setAdapter(new ForgroundAdapter(R.layout.dog_item, dogs, getContext()));
-                        carouselView.setClipChildren(false);
-                        carouselView.setClickToScroll(false);
-                        carouselView.setInfinite(true);
-                        carouselView.setExtraVisibleChilds(6);
-                        carouselView.setOnScrollListener(new CarouselView.OnScrollListener() {
-                            @Override
-                            public void onScrollEnd(CarouselView carouselView) {
-                                super.onScrollEnd(carouselView);
-                                carouselViewBackground.scrollToPosition(carouselView.getCurrentAdapterPosition());
-                            }
-                        });
-                        carouselView.setOnItemClickListener((adapter, view, position, adapterposition) -> {
-                            Toast.makeText(getContext()
-                                    , dogs.get(adapterposition).getBreed()
-                                    , Toast.LENGTH_SHORT).show();
-                        });
-                        
-                        carouselView.setOnItemSelectedListener(new CarouselView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(CarouselView carouselView, int position, int adapterPosition, RecyclerView.Adapter adapter) {
-                                if (dogs.size() > 0) {
-                                    label.setText(dogs.get(adapterPosition).getBreed());
-                                }
-                                carouselViewBackground.scrollToPosition(adapterPosition);
-                            }
-                            
-                            @Override
-                            public void onItemDeselected(CarouselView carouselView, int position, int adapterPosition, RecyclerView.Adapter adapter) {
-                            
-                            }
-                        });
-                        
-                    }
-                });
-        
-        return dogs;
-        
-    }
-    
-    @Override
-    public void onFailure(Call<Breeds> call, Throwable t) {
-        Toast.makeText(getContext(), "error", Toast.LENGTH_SHORT).show();
-        
-    }
+
+                    }*/
+
+			@Override
+			public void onNext(BreedImagePojo breedImagePojo) {
+				String url = breedImagePojo.getMessage();
+				dogs.add(new Dog(breedNames.get(count), breedImagePojo.getMessage()));
+				count++;
+			}
+
+			@Override
+			public void onError(Throwable e) {
+				// dogs.add(new Dog(s,breedImagePojos.get(0).getMessage()));
+
+			}
+
+			@Override
+			public void onComplete() {
+				Toast.makeText(getContext()
+						, "oncomplete"
+						, Toast.LENGTH_SHORT).show();
+				progressBar.setVisibility(View.GONE);
+				carouselViewBackground.setAdapter(new ForgroundAdapter(R.layout.background_item, dogs, getContext()));
+				carouselView.setTransformer(new FlatMerryGoRoundTransformer());
+				carouselView.setAdapter(new ForgroundAdapter(R.layout.dog_item, dogs, getContext()));
+				carouselView.setClipChildren(false);
+				carouselView.setClickToScroll(true);
+				carouselView.setInfinite(true);
+				carouselView.setExtraVisibleChilds(6);
+				carouselView.setOnScrollListener(new CarouselView.OnScrollListener() {
+					@Override
+					public void onScrollEnd(CarouselView carouselView) {
+						super.onScrollEnd(carouselView);
+						carouselViewBackground.scrollToPosition(carouselView.getCurrentAdapterPosition());
+					}
+				});
+				carouselView.setOnItemClickListener((adapter, view, position, adapterposition) -> {
+					Toast.makeText(getContext()
+							, dogs.get(adapterposition).getBreed()
+							, Toast.LENGTH_SHORT).show();
+				});
+
+				carouselView.setOnItemSelectedListener(new CarouselView.OnItemSelectedListener() {
+					@Override
+					public void onItemSelected(CarouselView carouselView, int position, int adapterPosition, RecyclerView.Adapter adapter) {
+						if (dogs.size() > 0) {
+							label.setText(dogs.get(adapterPosition).getBreed());
+						}
+						carouselViewBackground.scrollToPosition(adapterPosition);
+					}
+
+					@Override
+					public void onItemDeselected(CarouselView carouselView, int position, int adapterPosition, RecyclerView.Adapter adapter) {
+
+					}
+				});
+
+			}
+		};
+		return observer;
+	}
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
    
     
   /*  // TODO: Rename method, update argument and hook method into UI event
@@ -202,19 +207,19 @@ public class BreedsFragment extends Fragment implements Callback<Breeds> {
         super.onDetach();
         mListener = null;
     }*/
-    
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
+	/**
+	 * This interface must be implemented by activities that contain this
+	 * fragment to allow an interaction in this fragment to be communicated
+	 * to the activity and potentially other fragments contained in that
+	 * activity.
+	 * <p>
+	 * See the Android Training lesson <a href=
+	 * "http://developer.android.com/training/basics/fragments/communicating.html"
+	 * >Communicating with Other Fragments</a> for more information.
+	 */
+	public interface OnFragmentInteractionListener {
+		// TODO: Update argument type and name
+		void onFragmentInteraction(Uri uri);
+	}
 }
