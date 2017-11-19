@@ -17,6 +17,8 @@ import com.gtomato.android.ui.widget.CarouselView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,6 +27,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import randomtechsolutions.com.dogsparadise.Network.DogNetworkManager;
 import randomtechsolutions.com.dogsparadise.adapter.ForgroundAdapter;
+import randomtechsolutions.com.dogsparadise.di.DogsParadise;
 import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
 import randomtechsolutions.com.dogsparadise.model.Breeds;
 import randomtechsolutions.com.dogsparadise.model.Dog;
@@ -43,6 +46,7 @@ public class BreedsFragment extends Fragment {
 	private TextView label;
 	private ProgressBar progressBar;
 	private List<Dog> dogs;
+	@Inject
 	DogNetworkManager dogNetworkManager;
 
 	private List<String> breedNames;
@@ -56,6 +60,7 @@ public class BreedsFragment extends Fragment {
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_breeds, container, false);
+		DogsParadise.getNetworkComponent().inject(this);
 		//FragmentBreedsBinding fragmentBreedsBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.fragment_breeds,container,false);
 		carouselView = (CarouselView) v.findViewById(R.id.carousel);//fragmentBreedsBinding.carousel;
 		carouselViewBackground = (CarouselView) v.findViewById(R.id.carousel_background);
@@ -63,8 +68,6 @@ public class BreedsFragment extends Fragment {
 		progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 		progressBar.setVisibility(View.VISIBLE);
 		dogs = new ArrayList<>();
-		dogNetworkManager = new DogNetworkManager();
-
 
 		getBreedsObservable()
 				.flatMap(new Function<Breeds, Observable<String>>() {

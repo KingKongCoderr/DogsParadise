@@ -35,8 +35,14 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
     testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:support-annotations:26.1.0"
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+
+    //Dagger 2.0
+    compile 'com.google.dagger:dagger:2.13'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
 
 
     //retrofit
@@ -52,9 +58,9 @@ dependencies {
     compile 'com.gtomato.android.library:carouselview:2.0.1'
 
 
-    //Room persistence library
+   /* //Room persistence library
     implementation "android.arch.persistence.room:runtime:1.0.0-beta2"
-    annotationProcessor "android.arch.persistence.room:compiler:1.0.0-beta2"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0-beta2"*/
 
     //Picasso image loading library
     compile 'com.squareup.picasso:picasso:2.5.2'

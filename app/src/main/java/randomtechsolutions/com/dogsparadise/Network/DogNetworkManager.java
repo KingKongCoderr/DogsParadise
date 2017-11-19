@@ -1,5 +1,8 @@
 package randomtechsolutions.com.dogsparadise.Network;
 
+
+import javax.inject.Inject;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -9,23 +12,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class DogNetworkManager {
-    
-    public static final String baseUrl = "https://dog.ceo/";
-    
-    private DogsApi dogsApi;
-    
-    public DogNetworkManager() {
-    
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        
-        this.dogsApi = retrofit.create(DogsApi.class);
-    }
-    
-    public DogsApi getDogsApi() {
-        return dogsApi;
-    }
+
+	private DogsApi dogsApi;
+
+	public DogNetworkManager(String baseUrl) {
+
+		Retrofit retrofit = new Retrofit.Builder()
+				.baseUrl(baseUrl)
+				.addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
+				.addConverterFactory(GsonConverterFactory.create())
+				.build();
+
+		this.dogsApi = retrofit.create(DogsApi.class);
+	}
+
+	public DogsApi getDogsApi() {
+		return dogsApi;
+	}
 }
