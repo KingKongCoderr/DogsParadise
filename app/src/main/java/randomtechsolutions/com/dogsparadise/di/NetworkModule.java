@@ -3,7 +3,6 @@ package randomtechsolutions.com.dogsparadise.di;
 import dagger.Module;
 import dagger.Provides;
 import randomtechsolutions.com.dogsparadise.Network.DogNetworkManager;
-import randomtechsolutions.com.dogsparadise.Network.DogsApi;
 import randomtechsolutions.com.dogsparadise.Util.UrlManager;
 
 /**

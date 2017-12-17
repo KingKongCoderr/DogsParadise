@@ -17,8 +17,10 @@ public class DogsParadise extends Application {
 		as it hase implicit default constructor and doesn't require external state to be passed in as parameter
 		and dagger can handle these kind of modules*/
 
-		networkComponent = DaggerNetworkComponent
-				.builder().build();
+		//also eliminating ".builder().build();" as the NetworkModule is implicitly created.
+
+		networkComponent = DaggerNetworkComponent.create();
+
 	}
 
 	public static NetworkComponent getNetworkComponent() {

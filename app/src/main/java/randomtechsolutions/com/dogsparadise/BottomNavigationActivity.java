@@ -6,11 +6,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class BottomNavigationActivity extends AppCompatActivity {
+public class BottomNavigationActivity extends AppCompatActivity
+		implements BreedsFragmentInteractionListener {
 
 	private static final String BREEDS_FRAGMENT_TAG = "breeds";
 	private static final String IMAGES_FRAGMENT_TAG = "images";
+
+	private static final boolean isBreedSelected = false;
 
 
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -42,12 +46,16 @@ public class BottomNavigationActivity extends AppCompatActivity {
 
 	}
 
-	private void createImagesFragment() {
-	   /* if(getSupportFragmentManager().findFragmentByTag(IMAGES_FRAGMENT_TAG)!=null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, new ImagesFragment(), IMAGES_FRAGMENT_TAG)
-                    .commit();
-        }*/
+	private void createImagesFragment(String breedName) {
+		if (getSupportFragmentManager().findFragmentByTag(IMAGES_FRAGMENT_TAG) == null) {
+			if (isBreedSelected) {
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.container, ImagesFragment.newInstance(breedName), IMAGES_FRAGMENT_TAG)
+						.commit();
+			} else {
+				Toast.makeText(this,"Select a breed",Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 
@@ -63,5 +71,11 @@ public class BottomNavigationActivity extends AppCompatActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+
+	@Override
+	public void onBreedClicked(String breedName) {
+		//todo room.setSelectedBreedName = breedName;
+		createImagesFragment(breedName);
 	}
 }

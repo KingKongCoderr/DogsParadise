@@ -1,7 +1,9 @@
 package randomtechsolutions.com.dogsparadise;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,13 +34,6 @@ import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
 import randomtechsolutions.com.dogsparadise.model.Breeds;
 import randomtechsolutions.com.dogsparadise.model.Dog;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link BreedsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
 public class BreedsFragment extends Fragment {
 
 	// private OnFragmentInteractionListener mListener;
@@ -49,6 +44,8 @@ public class BreedsFragment extends Fragment {
 	@Inject
 	DogNetworkManager dogNetworkManager;
 
+	private BreedsFragmentInteractionListener mListener;
+
 	private List<String> breedNames;
 
 	public BreedsFragment() {
@@ -56,11 +53,16 @@ public class BreedsFragment extends Fragment {
 	}
 
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		DogsParadise.getNetworkComponent().inject(this);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_breeds, container, false);
-		DogsParadise.getNetworkComponent().inject(this);
 		//FragmentBreedsBinding fragmentBreedsBinding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.fragment_breeds,container,false);
 		carouselView = (CarouselView) v.findViewById(R.id.carousel);//fragmentBreedsBinding.carousel;
 		carouselViewBackground = (CarouselView) v.findViewById(R.id.carousel_background);
@@ -155,6 +157,10 @@ public class BreedsFragment extends Fragment {
 					}
 				});
 				carouselView.setOnItemClickListener((adapter, view, position, adapterposition) -> {
+					ImagesFragment imagesFragment = new ImagesFragment();
+					if (mListener != null) {
+						mListener.onBreedClicked(dogs.get(adapterposition).getBreed());
+					}
 					Toast.makeText(getContext()
 							, dogs.get(adapterposition).getBreed()
 							, Toast.LENGTH_SHORT).show();
@@ -186,19 +192,13 @@ public class BreedsFragment extends Fragment {
 		super.onDestroy();
 	}
    
-    
-  /*  // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
     
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof BreedsFragmentInteractionListener) {
+            mListener = (BreedsFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -209,20 +209,5 @@ public class BreedsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }*/
-
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html"
-	 * >Communicating with Other Fragments</a> for more information.
-	 */
-	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
-		void onFragmentInteraction(Uri uri);
-	}
+    }
 }
