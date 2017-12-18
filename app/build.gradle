@@ -59,11 +59,6 @@ dependencies {
     //coverflow dependency  https://android-arsenal.com/details/1/6051
     compile 'com.gtomato.android.library:carouselview:2.0.1'
 
-
-   /* //Room persistence library
-    implementation "android.arch.persistence.room:runtime:1.0.0-beta2"
-    annotationProcessor "android.arch.persistence.room:compiler:1.0.0-beta2"*/
-
     //Picasso image loading library
     compile 'com.squareup.picasso:picasso:2.5.2'
 
@@ -73,5 +68,24 @@ dependencies {
     compile 'jp.wasabeef:blurry:2.1.1'
 
     compile 'jp.wasabeef:picasso-transformations:2.1.2'
+
+    //Architecture components
+
+    //Room persistence library
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    implementation "android.arch.persistence.room:rxjava2:1.0.0"
+    //testing room migrations
+    testImplementation "android.arch.persistence.room:testing:1.0.0"
+
+    //Live Data / ViewModel
+    implementation "android.arch.lifecycle:extensions:1.0.0"
+    //For controlling LiveData background threads in your tests
+    testImplementation "android.arch.core:core-testing:1.0.0"
+    //Live Data / ViewModel with ReactiveStreams API
+    implementation "android.arch.lifecycle:reactivestreams:1.0.0"
+
+    //Lifecycle
+    implementation "android.arch.lifecycle:common-java8:1.0.0"
 
 }
