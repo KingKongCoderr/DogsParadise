@@ -8,13 +8,18 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import javax.inject.Inject;
+
+import randomtechsolutions.com.dogsparadise.RoomDatabase.DogsParadiseDatabase;
+import randomtechsolutions.com.dogsparadise.di.DogsParadise;
+
 public class BottomNavigationActivity extends AppCompatActivity
 		implements BreedsFragmentInteractionListener {
 
 	private static final String BREEDS_FRAGMENT_TAG = "breeds";
 	private static final String IMAGES_FRAGMENT_TAG = "images";
 
-	private static final boolean isBreedSelected = false;
+	private static boolean isBreedSelected = false;
 
 
 	private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -46,13 +51,16 @@ public class BottomNavigationActivity extends AppCompatActivity
 
 	}
 
-	private void createImagesFragment(String breedName) {
+	private void createImagesFragment(String breedNameSelected) {
 		if (getSupportFragmentManager().findFragmentByTag(IMAGES_FRAGMENT_TAG) == null) {
 			if (isBreedSelected) {
 				getSupportFragmentManager().beginTransaction()
-						.replace(R.id.container, ImagesFragment.newInstance(breedName), IMAGES_FRAGMENT_TAG)
+						.replace(R.id.container, ImagesFragment.newInstance(breedNameSelected), IMAGES_FRAGMENT_TAG)
 						.commit();
 			} else {
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.container, ImagesFragment.newInstance(""), IMAGES_FRAGMENT_TAG)
+						.commit();
 				Toast.makeText(this,"Select a breed",Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -75,6 +83,7 @@ public class BottomNavigationActivity extends AppCompatActivity
 
 	@Override
 	public void onBreedClicked(String breedName) {
+		isBreedSelected = true;
 		//todo room.setSelectedBreedName = breedName;
 		createImagesFragment(breedName);
 	}

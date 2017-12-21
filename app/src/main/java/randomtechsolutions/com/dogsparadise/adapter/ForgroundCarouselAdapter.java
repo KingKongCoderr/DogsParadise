@@ -16,7 +16,7 @@ import randomtechsolutions.com.dogsparadise.model.Dog;
  * Created by nande on 10/19/2017.
  */
 
-public class ForgroundAdapter extends BaseAdapter {
+public class ForgroundCarouselAdapter extends BaseCarouselAdapter {
     private final int layoutId;
     List<Dog> dogs;
     Context context;
@@ -58,7 +58,7 @@ public class ForgroundAdapter extends BaseAdapter {
                 //.onto(view);
     }*/
     
-    public ForgroundAdapter(int layoutId, List<Dog> dogs, Context context) {
+    public ForgroundCarouselAdapter(int layoutId, List<Dog> dogs, Context context) {
         this.layoutId = layoutId;
         this.dogs = dogs;
         this.context = context;

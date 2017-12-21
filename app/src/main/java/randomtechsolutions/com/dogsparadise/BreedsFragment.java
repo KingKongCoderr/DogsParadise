@@ -1,7 +1,6 @@
 package randomtechsolutions.com.dogsparadise;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,10 +27,10 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import randomtechsolutions.com.dogsparadise.Network.DogNetworkManager;
-import randomtechsolutions.com.dogsparadise.adapter.ForgroundAdapter;
+import randomtechsolutions.com.dogsparadise.adapter.ForgroundCarouselAdapter;
 import randomtechsolutions.com.dogsparadise.di.DogsParadise;
-import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
-import randomtechsolutions.com.dogsparadise.model.Breeds;
+import randomtechsolutions.com.dogsparadise.model.BreedRandomImagePojo;
+import randomtechsolutions.com.dogsparadise.RoomDatabase.Entities.BreedsPojo;
 import randomtechsolutions.com.dogsparadise.model.Dog;
 
 public class BreedsFragment extends Fragment {
@@ -55,7 +54,7 @@ public class BreedsFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		DogsParadise.getNetworkComponent().inject(this);
+		DogsParadise.getApplicationComponent().inject(this);
 	}
 
 	@Override
@@ -72,16 +71,16 @@ public class BreedsFragment extends Fragment {
 		dogs = new ArrayList<>();
 
 		getBreedsObservable()
-				.flatMap(new Function<Breeds, Observable<String>>() {
+				.flatMap(new Function<BreedsPojo, Observable<String>>() {
 					@Override
-					public Observable<String> apply(Breeds breeds) throws Exception {
-						breedNames = breeds.getMessage();
+					public Observable<String> apply(BreedsPojo breedsPojo) throws Exception {
+						breedNames = breedsPojo.getMessage();
 						return Observable.fromIterable(breedNames);
 					}
 				})
-				.flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
+				.flatMap(new Function<String, ObservableSource<BreedRandomImagePojo>>() {
 					@Override
-					public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
+					public ObservableSource<BreedRandomImagePojo> apply(String s) throws Exception {
 						return getBreedImageObservable(s);
 					}
 				})
@@ -93,19 +92,19 @@ public class BreedsFragment extends Fragment {
 	}
 
 
-	private Observable<Breeds> getBreedsObservable() {
+	private Observable<BreedsPojo> getBreedsObservable() {
 		return dogNetworkManager.getDogsApi().getBreeds();
 	}
 
-	private Observable<BreedImagePojo> getBreedImageObservable(String breedName) {
+	private Observable<BreedRandomImagePojo> getBreedImageObservable(String breedName) {
 		return dogNetworkManager.getDogsApi().getDogImageUrl(breedName);
 	}
 
 	/*private void getDogsWithImageUrl(List<String> message) {
-		Observable<BreedImagePojo> observable = Observable.fromIterable(message)
-				.flatMap(new Function<String, ObservableSource<BreedImagePojo>>() {
+		Observable<BreedRandomImagePojo> observable = Observable.fromIterable(message)
+				.flatMap(new Function<String, ObservableSource<BreedRandomImagePojo>>() {
 					@Override
-					public ObservableSource<BreedImagePojo> apply(String s) throws Exception {
+					public ObservableSource<BreedRandomImagePojo> apply(String s) throws Exception {
 						return getBreedImageObservable(s);
 					}
 				}).subscribeOn(Schedulers.io())
@@ -113,8 +112,8 @@ public class BreedsFragment extends Fragment {
 		observable.subscribe(getObserverWithImageUrl(message));
 	}*/
 
-	private DisposableObserver<BreedImagePojo> getObserverWithImageUrl() {
-		DisposableObserver observer = new DisposableObserver<BreedImagePojo>() {
+	private DisposableObserver<BreedRandomImagePojo> getObserverWithImageUrl() {
+		DisposableObserver observer = new DisposableObserver<BreedRandomImagePojo>() {
 			int count = 0;
 
                    /* @Override
@@ -124,7 +123,7 @@ public class BreedsFragment extends Fragment {
                     }*/
 
 			@Override
-			public void onNext(BreedImagePojo breedImagePojo) {
+			public void onNext(BreedRandomImagePojo breedImagePojo) {
 				String url = breedImagePojo.getMessage();
 				dogs.add(new Dog(breedNames.get(count), breedImagePojo.getMessage()));
 				count++;
@@ -142,9 +141,9 @@ public class BreedsFragment extends Fragment {
 						, "oncomplete"
 						, Toast.LENGTH_SHORT).show();
 				progressBar.setVisibility(View.GONE);
-				carouselViewBackground.setAdapter(new ForgroundAdapter(R.layout.background_item, dogs, getContext()));
+				carouselViewBackground.setAdapter(new ForgroundCarouselAdapter(R.layout.background_item, dogs, getContext()));
 				carouselView.setTransformer(new FlatMerryGoRoundTransformer());
-				carouselView.setAdapter(new ForgroundAdapter(R.layout.dog_item, dogs, getContext()));
+				carouselView.setAdapter(new ForgroundCarouselAdapter(R.layout.dog_item, dogs, getContext()));
 				carouselView.setClipChildren(false);
 				carouselView.setClickToScroll(true);
 				carouselView.setInfinite(true);

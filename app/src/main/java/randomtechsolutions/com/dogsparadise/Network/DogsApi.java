@@ -1,9 +1,9 @@
 package randomtechsolutions.com.dogsparadise.Network;
 
 import io.reactivex.Observable;
-import randomtechsolutions.com.dogsparadise.model.BreedImagePojo;
-import randomtechsolutions.com.dogsparadise.model.Breeds;
-import retrofit2.Call;
+import randomtechsolutions.com.dogsparadise.RoomDatabase.Entities.LocalBreedDetailPojo;
+import randomtechsolutions.com.dogsparadise.model.BreedRandomImagePojo;
+import randomtechsolutions.com.dogsparadise.RoomDatabase.Entities.BreedsPojo;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -14,8 +14,11 @@ import retrofit2.http.Path;
 public interface DogsApi   {
     
     @GET("api/breeds/list")
-    Observable<Breeds> getBreeds();
+    Observable<BreedsPojo> getBreeds();
     
     @GET("/api/breed/{breed}/images/random")
-    Observable<BreedImagePojo> getDogImageUrl(@Path("breed") String breed);
+    Observable<BreedRandomImagePojo> getDogImageUrl(@Path("breed") String breed);
+
+    @GET("/api/breed/{breedName}/images")
+    Observable<LocalBreedDetailPojo> getDogDetail(@Path("breedName") String breedName);
 }

@@ -11,7 +11,7 @@ import com.gtomato.android.ui.widget.CarouselView;
  * Created by nande on 10/19/2017.
  */
 
-public abstract class BaseAdapter extends CarouselView.Adapter<MyViewHolder> {
+public abstract class BaseCarouselAdapter extends CarouselView.Adapter<MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater =

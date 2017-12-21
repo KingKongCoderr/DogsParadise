@@ -8,7 +8,7 @@ import android.app.Application;
 
 public class DogsParadise extends Application {
 
-	private static NetworkComponent networkComponent;
+	private static ApplicationComponent applicationComponent;
 
 	@Override
 	public void onCreate() {
@@ -19,11 +19,13 @@ public class DogsParadise extends Application {
 
 		//also eliminating ".builder().build();" as the NetworkModule is implicitly created.
 
-		networkComponent = DaggerNetworkComponent.create();
+		applicationComponent = DaggerApplicationComponent.builder()
+				.networkModule(new NetworkModule())
+				.roomModule(new RoomModule(this)).build();
 
 	}
 
-	public static NetworkComponent getNetworkComponent() {
-		return networkComponent;
+	public static ApplicationComponent getApplicationComponent() {
+		return applicationComponent;
 	}
 }
