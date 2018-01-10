@@ -20,7 +20,6 @@ public class RoomModule {
 
 	private DogsParadiseDatabase database;
 
-	@Singleton
 	public RoomModule(Application application) {
 
 		this.database = Room.databaseBuilder(application,
@@ -28,19 +27,16 @@ public class RoomModule {
 	}
 
 	@Provides
-	@Singleton
 	DogsParadiseDatabase getDatabase(){
 		return database;
 	}
 
 	@Provides
-	@Singleton
 	BreedsDao getBreedsDao(DogsParadiseDatabase dogsParadiseDatabase){
 		return dogsParadiseDatabase.getBreedsDao();
 	}
 
 	@Provides
-	@Singleton
 	LocalBreedDetailDao getBreedDetailDao(DogsParadiseDatabase dogsParadiseDatabase){
 		return dogsParadiseDatabase.localBreedDetailDao();
 	}

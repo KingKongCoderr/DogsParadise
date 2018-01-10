@@ -2,6 +2,7 @@ package randomtechsolutions.com.dogsparadise.RoomDatabase.Entities;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
@@ -18,6 +19,7 @@ public class LocalBreedDetailPojo {
 	@PrimaryKey
 	private int breedId;
 
+	@Ignore
 	@SerializedName("status")
 	private String status;
 

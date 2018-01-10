@@ -31,10 +31,10 @@ public class ImagesFragment extends Fragment {
 	private FragmentSelectedBreedBinding binding;
 
 	@Inject
-	private BreedsDao breedsDao;
+	public BreedsDao breedsDao;
 
 	@Inject
-	private LocalBreedDetailDao localBreedDetailDao;
+	public LocalBreedDetailDao localBreedDetailDao;
 
 	//public empty constructor
 	public ImagesFragment() {

@@ -29,7 +29,8 @@ public class BottomNavigationActivity extends AppCompatActivity
 				createBreedFragment();
 				return true;
 			case R.id.navigation_images:
-				createImagesFragment();
+				//createImagesFragment();
+				//todo: look into above commented line
 				return true;
 			case R.id.navigation_saved:
 				createSavedFragment();
